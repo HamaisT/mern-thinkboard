@@ -1,0 +1,10 @@
+folder named: mern-thinkboard.
+2 sub folders: backend, frontend.
+cd backend.
+npm init -y
+npm install express@4.18.2
+created file server.js, changes in package.json: type="module" not commonjs.
+npm install nodemon -D and changed dev script to nodemon in package.json.
+also added script start: "node server.js" in package.json (for deployment/production).
+Endpoint: combination of url and http method to help client interact with specific resource.
+
