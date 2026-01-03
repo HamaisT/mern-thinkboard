@@ -9,9 +9,12 @@ const rateLimiter = async (req, res, next ) => {
         }
         next();
     } catch (error) {
-        console.log("Rate limit error", error);
-        next(error);
-    }   
+        // ⬇️ THIS is the key
+        return res.status(429).json({message: "Too many requests (rate limiter fallback)",
+        // console.log("Rate limit error", error);
+        // next(error);
+    });   
+}
 };
 
 export default rateLimiter;
