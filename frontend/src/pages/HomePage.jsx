@@ -19,13 +19,14 @@ const Homepage = () => {
         // const data = await res.json();
         console.log(res.data);
         setNotes(res.data);
-        isRateLimited(false);
+        setIsRateLimited(false);
       } catch (error) {
         console.log('Error fetching notes');
-        console.log(error);
+        console.log(error.response);
         if(error.response?.status === 429) {
           setIsRateLimited(true);
         } else {
+          console.error('Error in fetching notes 222222:', error);
             toast.error('Failed to fetch notes');
           }
       } finally {
