@@ -2,6 +2,7 @@ import 'dotenv/config';
 
 import express from 'express';
 import cors from 'cors';
+import path from 'path'
 
 import notesRoutes from './routes/notesRoutes.js';
 import { connectDB } from './config/db.js';
@@ -9,12 +10,17 @@ import rateLimiter from './middleware/rateLimiter.js';
 
 const app = express();
 const PORT = process.env.PORT || 5001;
+const __dirname = path.resolve() //sourse of backend
 
 // middlesware
-app.use(cors({
+
+if(process.env.Node_ENV !== 'production') { // only execute in development mode
+  app.use(cors({
   origin: 'http://localhost:5173',
 })
 );
+}
+
 app.use(express.json()); //this middleware to parse json bodies, allows access to req.body
 app.use(rateLimiter);
 
@@ -30,6 +36,14 @@ app.use(rateLimiter);
 // })
 
 app.use('/api/notes', notesRoutes);
+
+if(process.env.Node_ENV === 'production') { //only in production mode
+  app.use(express.static(path.join(__dirname, "../frontend/dist"))) //server optimized react app as static asset
+
+app.get("*", (rep,res) => {   // to serve app also on localhost:5001 other than /api/notes
+  res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html" )); //index.html to serve app
+});
+}
 
 connectDB().then(() => {
 
